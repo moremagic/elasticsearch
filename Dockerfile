@@ -20,7 +20,8 @@ RUN bin/plugin install analysis-kuromoji
 RUN bin/plugin install mobz/elasticsearch-head
 
 RUN echo network.host: 0.0.0.0$'\n'node.name: $'${HOSTNAME}\n' >> /etc/elasticsearch/elasticsearch.yml
-RUN echo cluster.name: docker.elasticsearch >> /etc/elasticsearch/elasticsearch.yml
+RUN echo cluster.name: docker.elasticsearch$'\n' >> /etc/elasticsearch/elasticsearch.yml
+RUN echo discovery.zen.ping.multicast.enabled: false >> /etc/elasticsearch/elasticsearch.yml
 
 EXPOSE 22 9200
 CMD /etc/init.d/elasticsearch start; \
