@@ -14,13 +14,21 @@ RUN yum install -y passwd openssh-* initscripts \
 RUN rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
 ADD elasticsearch.repo /etc/yum.repos.d/
 RUN yum update && yum install -y elasticsearch
-
-WORKDIR /usr/share/elasticsearch
-RUN bin/plugin install analysis-kuromoji
-RUN bin/plugin install mobz/elasticsearch-head
-RUN bin/plugin install discovery-multicast
-
 RUN echo network.host: _site_$'\n'node.name: $'${HOSTNAME}' >> /etc/elasticsearch/elasticsearch.yml
+
+# elasticsearch config
+WORKDIR /usr/share/elasticsearch
+
+# elasticsearch-head config
+RUN bin/plugin install mobz/elasticsearch-head
+
+# kuromoji config
+RUN bin/plugin install analysis-kuromoji
+RUN echo index.analysis.analyzer.default.type: custom  >> /etc/elasticsearch/elasticsearch.yml
+RUN echo index.analysis.analyzer.default.tokenizer: kuromoji_tokenizer >> /etc/elasticsearch/elasticsearch.yml
+
+# discovery-multicast config
+RUN bin/plugin install discovery-multicast
 RUN echo cluster.name: docker.elasticsearch>> /etc/elasticsearch/elasticsearch.yml
 RUN echo discovery.zen.ping.multicast.enabled: true>> /etc/elasticsearch/elasticsearch.yml
 RUN echo network.bind_host: _site_>> /etc/elasticsearch/elasticsearch.yml
