@@ -19,7 +19,8 @@ WORKDIR /usr/share/elasticsearch
 RUN bin/plugin install analysis-kuromoji
 RUN bin/plugin install mobz/elasticsearch-head
 
-RUN echo network.host: 0.0.0.0$'\n'node.name: $'${HOSTNAME}' >> /etc/elasticsearch/elasticsearch.yml
+RUN echo network.host: 0.0.0.0$'\n'node.name: $'${HOSTNAME}\n' >> /etc/elasticsearch/elasticsearch.yml
+RUN echo cluster.name: docker.elasticsearch >> /etc/elasticsearch/elasticsearch.yml
 
 EXPOSE 22 9200
 CMD /etc/init.d/elasticsearch start; \
